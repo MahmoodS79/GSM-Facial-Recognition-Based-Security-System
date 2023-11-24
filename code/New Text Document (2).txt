@@ -1,0 +1,351 @@
+#include <SoftwareSerial.h>
+
+String inputString = "";
+
+String fromGSM = "";
+
+SoftwareSerial mySerial(3, 2);
+
+char Sim800L[255], SMS[255], smsMemory[5], SmS_Index[5];
+
+int Sim800LIndex = 0, SMS_Index = 0, S_Index = 0;
+
+bool NewSMSArrived = 0, SMSmemory = 0;
+
+void setup()
+
+{
+
+Serial.begin(9600);
+
+mySerial.begin(9600);
+
+inputString.reserve(200);
+
+fromGSM.reserve(200);
+
+Serial.println(" Command --> AT ");
+
+mySerial.print("AT");
+
+mySerial.print("\r");
+
+delay(100);
+
+Serial.print(" Response --> ");
+
+while (mySerial.available())
+
+{
+
+Sim800L[Sim800LIndex] = mySerial.read();
+
+Sim800LIndex++;
+
+Serial.print( Sim800L[Sim800LIndex - 1]);
+
+}
+
+Sim800LIndex = 0;
+
+Serial.println("");
+
+Serial.println(" Command --> ATEO ");
+
+Serial.print(" Response --> ");
+
+mySerial.print("ATE0");
+
+mySerial.print("\r");
+
+delay(100);
+
+while (mySerial.available())
+
+{
+
+Sim800L[Sim800LIndex] = mySerial.read();
+
+Sim800LIndex++;
+
+Serial.print( Sim800L[Sim800LIndex - 1]);
+
+}
+
+Sim800LIndex = 0;
+
+Serial.println("");
+
+Serial.println(" Command --> AT+CFUN=1 ");
+
+Serial.print(" Response --> ");
+
+mySerial.print("AT+CFUN =1");
+
+mySerial.print("\r");
+
+delay(100);
+
+// while( ! (mySerial.available()) );
+
+while (mySerial.available())
+
+{
+
+Sim800L[Sim800LIndex] = mySerial.read();
+
+Sim800LIndex++;
+
+Serial.print( Sim800L[Sim800LIndex - 1]);
+
+}
+
+Sim800LIndex = 0;
+
+Serial.println("");
+
+Serial.println(" Command --> AT+CMGF=1 ");
+
+Serial.print(" Response --> ");
+
+mySerial.print("AT+CMGF =1");
+
+mySerial.print("\r");
+
+delay(100);
+
+// while( ! (mySerial.available()) );
+
+while (mySerial.available())
+
+{
+
+Sim800L[Sim800LIndex] = mySerial.read();
+
+Sim800LIndex++;
+
+Serial.print( Sim800L[Sim800LIndex - 1]);
+
+}
+
+Serial.println(" Command --> AT+CSCS=\"GSM\"");
+
+Serial.print(" Response --> ");
+
+mySerial.print("AT+CSCS =\"GSM\"");
+
+mySerial.print("\r");
+
+delay(100);
+
+// while( ! (mySerial.available()) );
+
+while (mySerial.available())
+
+{
+
+Sim800L[Sim800LIndex] = mySerial.read();
+
+Sim800LIndex++;
+
+Serial.print( Sim800L[Sim800LIndex - 1]);
+
+}
+
+Serial.println(" Command --> AT+CPMS=\"SM\"");
+
+Serial.print(" Response --> ");
+
+mySerial.print("AT+CPMS =\"SM\"");
+
+mySerial.print("\r");
+
+delay(100);
+
+// while( ! (mySerial.available()) );
+
+while (mySerial.available())
+
+{
+
+Sim800L[Sim800LIndex] = mySerial.read();
+
+Sim800LIndex++;
+
+Serial.print( Sim800L[Sim800LIndex - 1]);
+
+}
+
+/*
+
+Serial.println(" Command --> AT+CMGS=\"8669026867\"");
+
+Serial.print(" Response --> ");
+
+mySerial.print("AT+CMGS=\"8669026867\"");
+
+mySerial.print("\n");
+
+delay(100);
+
+//while( ! (mySerial.available()) );
+
+while(mySerial.available())
+
+{
+
+Sim800L[Sim800LIndex] = mySerial.read();
+
+Sim800LIndex++;
+
+Serial.print( Sim800L[Sim800LIndex-1]);
+
+}
+
+mySerial.print(" ENTER THE TXT YOU WISH TO SEND IN THE SMS ");
+
+mySerial.write(0x1A);
+
+*/
+
+Serial.print(" CHECK THE DESTINATION DEVICE ");
+
+}
+
+void loop()
+
+{
+
+while (1)
+
+{
+
+while (Serial.available())
+
+{
+
+Sim800L[Sim800LIndex] = Serial.read();
+
+Sim800LIndex++;
+
+mySerial.print( Sim800L[Sim800LIndex - 1]);
+
+}
+
+while (mySerial.available())
+
+{
+
+Sim800L[Sim800LIndex] = mySerial.read();
+
+Sim800LIndex++;
+
+Serial.print( Sim800L[Sim800LIndex - 1]);
+
+if (Sim800L[Sim800LIndex - 6] == '+' && Sim800L[Sim800LIndex - 5] == 'C' && Sim800L[Sim800LIndex - 4] == 'M' && Sim800L[Sim800LIndex - 3] == 'T' && Sim800L[Sim800LIndex - 2] == 'I' && Sim800L[Sim800LIndex - 1] == ':')
+
+{
+
+SMSmemory = 1;
+
+NewSMSArrived = 1;
+
+}
+
+if (SMSmemory == 1)
+
+{
+
+if (Sim800L[Sim800LIndex - 1] == ',')
+
+{
+
+smsMemory[0] = Sim800L[Sim800LIndex - 4] ;
+
+smsMemory[1] = Sim800L[Sim800LIndex - 3] ;
+
+smsMemory[2] = '\0' ;
+
+SMSmemory = 0;
+
+}
+
+}
+
+delay(5);
+
+} // end of while mySerial.available()
+
+if (NewSMSArrived == 1)
+
+{
+
+int j = 0;
+
+while (Sim800L[j] != '\0')
+
+{
+
+j++;
+
+}
+
+for (int i = 0; i < j ; i++)
+
+{
+
+SMS[i] = Sim800L[i];
+
+}
+
+NewSMSArrived = 0;
+
+Serial.println(SMS);
+
+while (SMS[j - 1] != ',')
+
+{
+
+j--;
+
+}
+
+int i = 0;
+
+while (SMS[j - 1] != '\0' )
+
+{
+
+SmS_Index[i] = SMS[j];
+
+i++;
+
+j++;
+
+}
+
+Serial.println("SMS index is as follow ");
+
+Serial.println(SmS_Index);
+
+Serial.println("SMS Memory is as follow ");
+
+Serial.println(smsMemory);
+
+Serial.println("");
+
+Serial.println(" NEW SMS ARRIVED ");
+
+Serial.println("");
+
+mySerial.print("AT+CMGR=");
+
+mySerial.print(SmS_Index);
+
+mySerial.print("\r");
+
+}
+
+}
+
+}
