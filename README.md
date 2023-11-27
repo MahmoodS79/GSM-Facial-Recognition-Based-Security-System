@@ -2,17 +2,21 @@
 # GSM & Facial Recognition Based Security System
 ---
 ### High level description
->The project will detect any movement in the problem then a record will start for 15 sec as the intruder must identify himself to the camera if he didn't stand in front of the Camera of the Pi controller, then a call is made to the supervisor and the record is reported to an email.
+>The project will detect any movement using a motion sensor, and then a video record will start for 15 seconds as the intruder must identify himself to the camera. if he didn't stand in front of the camera or the person wasn't given access, then a call is made to the supervisor, and the video record is sent to an email.
 
 
 ### Low level description
->This project will initially initialize the hw components Microcontrollers, sensors, and Pi camera inputs and outputs.
+>The hardware components, microcontrollers, sensors, and Pi camera inputs and outputs are connected.
 
->Next the code will enter a loop waiting for any interrupt through motion sensor that will make the camera record a video for 15 sec to recognize the intruder through facial recognition code if he wasn't recognized the record would be sent through specified secure email, then Pi will send a certain msg to Arduino to send cmds to the GSM module
+>Next, the code will enter a loop waiting for any movement through the motion sensor.
+>> If there is movement, the camera will record a video for 15 seconds to recognize the intruder through facial recognition.
+>>> If it isn't recognized, the video record will be sent to a specified email, and then Pi will send a certain msg to Arduino to send cmds to the GSM module
+
 
 >Also, GSM role will be operational as GSM module will make a certain role if the intruder wasn't recognized
 
->GSM module can RX certain specified cmd through SIM memory to make call, to send SMS msg .... etc(as specified in the code). any Received cmd through sms msg to GSM module will be sent to the Arduino to apply CMDs within the sms, the GSM will be operational for specific cmds such as sw a led on or off, but it will make a call when interruption occurs and send sms to a specific number (MSSISDN)
+>The GSM module will then send either an sms or a call to a specific number through a SIM card to warn that there could be an intruder.
+>>GSM module can RX certain specified cmds through SIM memory to make call, to send SMS msg .... etc(as specified in the code). Any Received cmd through sms msg to GSM module will be sent to the Arduino to apply CMDs within the sms, the GSM will be operational for specific cmds such as sw a led on or off, but it will make a call when interruption occurs and send sms to a specific number (MSSISDN)
 
 
 ### Installation
