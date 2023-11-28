@@ -68,14 +68,20 @@ if the settings of the PI weren't changed
 
 ### Usage/Examples
 
-
+```bash
+#clone the project to your desktop
+[root@client ~]#git clone https://github.com/MahmoodS79/GSM-Facial-Recognition-Based-Security-System/tree/master/code
+```
+ 
 ```c
-//must use Arduino IDE to burn the .ino code on Arduino
+//must use Arduino IDE to burn the .ino code on Arduino wihin the 'code' folder
 ```
 
 
 ```bash
 #after logging into putty remotly to the PI
-[root@client ~]#./test__.py
+[root@client ~]#./code/test__.py
+or
+[root@client ~]#python /home/user/Desktop/code/test__.py
 ```
  
